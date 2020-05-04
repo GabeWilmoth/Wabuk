@@ -1,0 +1,22 @@
+require('dotenv').config();
+
+module.exports = class RedditConnection {
+
+    constructor() {
+        //require snoowrap (A wrapper around the reddit API)
+        this.snoowrap = require('snoowrap');
+    }
+    
+    getConnection(){
+        //Connection info for snoowrap
+        const r = new this.snoowrap({
+            userAgent: process.env.userAgentREDDIT,
+            clientId: process.env.clientIdREDDIT,
+            clientSecret: process.env.clientSecretREDDIT,
+            username: process.env.usernameREDDIT,
+            password: process.env.passwordREDDIT
+        });
+
+        return r;
+    }
+}

@@ -1,34 +1,14 @@
+let MemeGenerator = require('./redditServices/MemeGenerator.js');
+
 // require the discord.js module
 const Discord = require('discord.js');
 // dotenv for storing the token
 require('dotenv').config();
-// require snoowrap (A wrapper around the reddit API)
-var snoowrap = require('snoowrap');
 
 const token = process.env.TOKEN;
 
 // create a new Discord client
 const client = new Discord.Client();
-
-
-
-let memeURL;
-// Alternatively, just pass in a username and password for script-type apps.
-const r = new snoowrap({
-    userAgent: process.env.userAgentREDDIT,
-    clientId: process.env.clientIdREDDIT,
-    clientSecret: process.env.clientSecretREDDIT,
-    username: process.env.usernameREDDIT,
-    password: process.env.passwordREDDIT
-  });
-
-//Getting the Subreddit for memes
-r.getSubreddit('memes').getHot().then(Listing =>{
-    console.log(Listing[2].url);
-    memeURL = Listing[2].url;
-});
-
-
 
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
@@ -43,12 +23,49 @@ client.on('message', message => {
     }
 });
 
-client.on('message', message => {
-	if (message.content === '!meme') {
-        // send back a meme to the channel the message was sent in
-        message.channel.send(memeURL);
+client.on('message', async message => {
+	if (message.content === '!postMemeOfDayHere') {
+
+        let memeOfDayChannelID = message.channel.id;
+        console.log(memeOfDayChannelID);
+
+        testing(memeOfDayChannelID);
     }
 });
+
+async function testing(memeOfDayChannelID){
+    let alreadyPostestToday = false;
+    let plusOne = 0;
+
+    while (true) {
+        let Todaysdate = new Date();
+        let hours = Todaysdate.getHours();
+        let dayOfMonth = Todaysdate.getDate();
+        let month = Todaysdate.getMonth() + 1;
+        
+        var yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        // if(plusOne < 2){
+        //     yesterday.setDate(yesterday.getDate + 2);
+        // }
+
+        if(yesterday.getDate() == Todaysdate.getDate() && (yesterday.getMonth() + 1) == (Todaysdate.getMonth() + 1)) {
+            alreadyPostestToday = false;
+            console.log('HERE');
+        }
+
+        if (hours == 15 && !alreadyPostestToday) {
+            alreadyPostestToday = true;
+            console.log('HERE2');
+            // plusOne++;
+            let memeGen = new MemeGenerator();
+            //Array of Memes, Poggers
+            let meme = await memeGen.getMeme();
+            await client.channels.fetch(memeOfDayChannelID).then(async channel => await channel.send(meme[0]));
+        }
+    }
+}
 
 // login to Discord with your app's token
 client.login(token);
