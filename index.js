@@ -68,4 +68,14 @@ async function testing(memeOfDayChannelID){
 }
 
 // login to Discord with your app's token
-client.login(token);
+client.login(token).then(retVal =>{
+    (client.guilds.resolve('696215256518754406').members.fetch().then(totalUsers => {
+        console.log(totalUsers.find('398289694686969866').id);
+    }));
+
+    // console.log(totalUsers.catch());
+
+    // totalUsers.then(test =>{
+    //     console.log(test.find('398289694686969866').lastMessage);
+    // });    
+});
