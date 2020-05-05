@@ -35,30 +35,22 @@ client.on('message', async message => {
 
 async function testing(memeOfDayChannelID){
     let alreadyPostestToday = false;
-    let plusOne = 0;
-
+   
     while (true) {
         let Todaysdate = new Date();
         let hours = Todaysdate.getHours();
-        let dayOfMonth = Todaysdate.getDate();
-        let month = Todaysdate.getMonth() + 1;
-        
-        var yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        
-        // if(plusOne < 2){
-        //     yesterday.setDate(yesterday.getDate + 2);
-        // }
 
-        if(yesterday.getDate() == Todaysdate.getDate() && (yesterday.getMonth() + 1) == (Todaysdate.getMonth() + 1)) {
+        console.log(hours);
+
+        if(hours == 0) {
             alreadyPostestToday = false;
-            console.log('HERE');
+            console.log('here');
         }
 
-        if (hours == 15 && !alreadyPostestToday) {
+
+        if (hours == 12 && !alreadyPostestToday) {
             alreadyPostestToday = true;
             console.log('HERE2');
-            // plusOne++;
             let memeGen = new MemeGenerator();
             //Array of Memes, Poggers
             let meme = await memeGen.getMeme();
@@ -70,7 +62,7 @@ async function testing(memeOfDayChannelID){
 // login to Discord with your app's token
 client.login(token).then(retVal =>{
     (client.guilds.resolve('696215256518754406').members.fetch().then(totalUsers => {
-        console.log(totalUsers.find('398289694686969866').id);
+        console.log(totalUsers.get('398289694686969866'));
     }));
 
     // console.log(totalUsers.catch());
