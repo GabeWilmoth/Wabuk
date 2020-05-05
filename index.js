@@ -17,14 +17,14 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.content === '!ping') {
+	if (message.content === 'Rping') {
         // send back "Pong." to the channel the message was sent in
         message.channel.send('Pong.');
     }
 });
 
 client.on('message', async message => {
-	if (message.content === '!postMemeOfDayHere') {
+	if (message.content === 'RpostMemeOfDayHere') {
 
         let memeOfDayChannelID = message.channel.id;
         console.log(memeOfDayChannelID);
