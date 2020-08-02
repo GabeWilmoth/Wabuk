@@ -22,23 +22,9 @@ module.exports = class MemeGenerator {
         });
     }
 
-    async dailyPostLoop(memeOfDayChannelID, client, message) {
-        let alreadyPostestToday = false;
-       
-        while (true) {
-            let Todaysdate = new Date();
-            let hours = Todaysdate.getHours();
-    
-            if(hours == 0) {
-                alreadyPostestToday = false;
-            }
-    
-            if (hours == 18 && !alreadyPostestToday) {
-                alreadyPostestToday = true;
-                //Array of Memes, Poggers
-                let meme = await this.getMeme();
-                await client.channels.fetch(memeOfDayChannelID).then(async channel => await channel.send(meme[0]));
-            }
-        }
+    async dailyMeme(memeOfDayChannelID, client, message) {
+        //Array of Memes, Poggers
+        let meme = await this.getMeme();
+        let yo = await client.channels.fetch(memeOfDayChannelID).then(async channel => await channel.send(meme[0]));
     }
 }

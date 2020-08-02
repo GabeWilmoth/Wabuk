@@ -10,6 +10,9 @@ const token = process.env.TOKEN;
 // create a new Discord client
 const client = new Discord.Client();
 
+// requiring cron package to schedule events
+var cron = require("cron");
+
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
 client.once('ready', () => {
@@ -23,21 +26,26 @@ client.on('message', message => {
     }
 });
 
-client.on('message', async message => {
-	if (message.content === 'RpostMemeOfDayHere') {
-
+client.on('message', message => {
+    if(message.content === 'RpostMemeOfDayHere') {
         let memeOfDayChannelID = message.channel.id;
+
         console.log(memeOfDayChannelID);
 
-        let memeGen = new MemeGenerator();
+        var memeGen = new MemeGenerator();
 
-        memeGen.dailyPostLoop(memeOfDayChannelID, client, message);
+        // Cron Job to run every day at 12:00 aka 12pm aka noon.
+        let scheduledMessage = new cron.CronJob('0 00 12 * * *', () => {
+            memeGen.dailyMeme(memeOfDayChannelID, client, message)
+        });
+
+        scheduledMessage.start();
     }
 });
 
 // login to Discord with your app's token
 client.login(token).then(retVal => {
-    (client.guilds.resolve('696215256518754406').members.fetch().then(totalUsers => {
-        console.log(totalUsers.get('398289694686969866'));
-    }));
+    // (client.guilds.resolve('696215256518754406').members.fetch().then(totalUsers => {
+    //     console.log(totalUsers.get('398289694686969866'));
+    // }));
 });
