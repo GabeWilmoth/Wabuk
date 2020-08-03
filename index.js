@@ -1,17 +1,23 @@
-let MemeGenerator = require('./redditServices/MemeGenerator.js');
-
 // require the discord.js module
 const Discord = require('discord.js');
 // dotenv for storing the token
 require('dotenv').config();
 
 const token = process.env.TOKEN;
-
+const prefix = process.env.PREFIX;
 // create a new Discord client
 const client = new Discord.Client();
 
-// requiring cron package to schedule events
-var cron = require("cron");
+//Dynamic Command's
+const fs = require('fs');
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    console.log(command);
+	client.commands.set(command.name, command);
+}
 
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
@@ -20,27 +26,20 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.content === 'Rping') {
-        // send back "Pong." to the channel the message was sent in
-        message.channel.send('Pong.');
-    }
-});
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-client.on('message', message => {
-    if(message.content === 'RpostMemeOfDayHere') {
-        let memeOfDayChannelID = message.channel.id;
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
 
-        console.log(memeOfDayChannelID);
+    if (!client.commands.has(command)) return;
 
-        var memeGen = new MemeGenerator();
-
-        // Cron Job to run every day at 12:00 aka 12pm aka noon.
-        let scheduledMessage = new cron.CronJob('0 00 12 * * *', () => {
-            memeGen.dailyMeme(memeOfDayChannelID, client, message)
-        });
-
-        scheduledMessage.start();
-    }
+	try {
+        console.log("HERE");
+		client.commands.get(command).execute(message, args);
+	} catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
+	}
 });
 
 // login to Discord with your app's token
