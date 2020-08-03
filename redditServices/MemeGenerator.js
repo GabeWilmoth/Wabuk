@@ -1,4 +1,6 @@
 let RedditConnection = require('./RedditConnection.js');
+// require global logger from winston
+var logger = require('./logger/Logger.js');
 
 module.exports = class MemeGenerator {
 

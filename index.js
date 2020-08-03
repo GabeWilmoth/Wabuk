@@ -2,6 +2,8 @@
 const Discord = require('discord.js');
 // dotenv for storing the token
 require('dotenv').config();
+// require global logger from winston
+var logger = require('./logger/Logger.js');
 
 const token = process.env.TOKEN;
 const prefix = process.env.PREFIX;
@@ -35,6 +37,7 @@ client.on('message', message => {
 
 	try {
         console.log("HERE");
+        logger.info("TESTING LOGS");
 		client.commands.get(command).execute(message, args);
 	} catch (error) {
 		console.error(error);

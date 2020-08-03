@@ -1,4 +1,6 @@
 require('dotenv').config();
+// require global logger from winston
+var logger = require('./logger/Logger.js');
 
 module.exports = class RedditConnection {
 
