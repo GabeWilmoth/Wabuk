@@ -1,7 +1,7 @@
 let MemeGenerator = require('../redditServices/MemeGenerator.js');
 var cron = require("cron");
 // require global logger from winston
-var logger = require('./logger/Logger.js');
+var logger = require('../logger/Logger.js');
 
 module.exports = {
 	name: 'meme',

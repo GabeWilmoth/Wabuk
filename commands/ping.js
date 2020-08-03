@@ -1,5 +1,5 @@
 // require global logger from winston
-var logger = require('./logger/Logger.js');
+var logger = require('../logger/Logger.js');
 
 module.exports = {
 	name: 'ping',
