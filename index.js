@@ -17,14 +17,14 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    console.log(command);
+    logger.info("JSON of possible commands: " + JSON.stringify(command));
 	client.commands.set(command.name, command);
 }
 
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
 client.once('ready', () => {
-	console.log('Ready!');
+    logger.info("The Client is Ready");
 });
 
 client.on('message', message => {
@@ -36,11 +36,9 @@ client.on('message', message => {
     if (!client.commands.has(command)) return;
 
 	try {
-        console.log("HERE");
-        logger.info("TESTING LOGS");
 		client.commands.get(command).execute(message, args);
 	} catch (error) {
-		console.error(error);
+        logger.error("there was an error trying to execute that command! " + error);
 		message.reply('there was an error trying to execute that command!');
 	}
 });
