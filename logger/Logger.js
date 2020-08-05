@@ -1,6 +1,5 @@
 const winston = require('winston');
 require('dotenv').config();
-var moment = require('moment-timezone');
 
  // Logger configuration
  const logConfiguration = {
@@ -10,7 +9,7 @@ var moment = require('moment-timezone');
      ],
      format: winston.format.combine(
          winston.format.timestamp({
-             format: moment(new Date()).tz('America/New_York').format("YYYY-MM-DD HH:mm:ss")
+             format: 'YYYY-MM-DD HH:mm:ss'
          }),
          winston.format.printf((info) => {
              return `${info.timestamp} - [${info.level.toUpperCase()}]: ${info.message}`;
