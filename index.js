@@ -17,7 +17,7 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-    logger.info("JSON of possible commands: " + JSON.stringify(command));
+    logger.info(`JSON of possible commands: ${JSON.stringify(command)}`);
 	client.commands.set(command.name, command);
 }
 
@@ -38,8 +38,8 @@ client.on('message', message => {
 	try {
 		client.commands.get(command).execute(message, args);
 	} catch (error) {
-        logger.error("there was an error trying to execute that command! " + error);
-		message.reply('there was an error trying to execute that command!');
+        logger.error(`There was an error trying to execute that command! ${error}`);
+		message.reply('There was an error trying to execute that command!');
 	}
 });
 

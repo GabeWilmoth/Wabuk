@@ -9,7 +9,7 @@ module.exports = {
 	execute(message, args) {
 		let memeOfDayChannelID = message.channel.id;
 
-        console.log(memeOfDayChannelID);
+        logger.info(`Meme Command used in channel: ${message.channel.name} channel id: ${memeOfDayChannelID}`);
 
         var memeGen = new MemeGenerator();
 
@@ -19,5 +19,9 @@ module.exports = {
         });
 
         scheduledMessage.start();
+
+        message.delete().then(msg => logger.info(`Deleted message from ${msg.author.username}`))
+        .catch(error => logger.error(`Attempted deleting message and encountered error: ${error}`));
+        //TODO : Might want to add in a reply to the channel / message if an error is occured asking for permisions for the bot.
 	},
 };
