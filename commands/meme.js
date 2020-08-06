@@ -7,6 +7,9 @@ module.exports = {
 	name: 'meme',
 	description: 'MemeOfDay',
 	execute(message, args) {
+
+        //TODO: Maybe allow users to specify how many memes they want posted a day and at what times? (Taking in times would take a lot of formatting or forcing strict formatting on users)
+
 		let memeOfDayChannelID = message.channel.id;
 
         logger.info(`Meme Command used in channel: ${message.channel.name} channel id: ${memeOfDayChannelID}`);
