@@ -21,7 +21,11 @@ module.exports = {
         scheduledMessage.start();
 
         message.delete().then(msg => logger.info(`Deleted message from ${msg.author.username}`))
-        .catch(error => logger.error(`Attempted deleting message and encountered error: ${error}`));
-        //TODO : Might want to add in a reply to the channel / message if an error is occured asking for permisions for the bot.
+        .catch(error => {
+            logger.error(`Attempted deleting message and encountered error: ${error}`);
+            if(error.message === 'Missing Permissions') {
+                message.reply("I'm attempting to delet 'Rmeme' however, I'm Missing Permissions. Please Grant Permissions or remove these messages :thumbsup_tone3:");
+            }
+        });
 	},
 };
