@@ -27,6 +27,10 @@ module.exports = class MemeGenerator {
     async dailyMeme(memeOfDayChannelID, client, message) {
         //Array of Memes, Poggers
         let meme = await this.getMeme();
-        await client.channels.fetch(memeOfDayChannelID).then(async channel => await channel.send(meme[0]).then(sentMessage => logger.info(`Sent message: ${sentMessage.content} to channel: ${memeOfDayChannelID}`)).catch(error => logger.error(`error sending meme message ${error}`)));
+        await client.channels.fetch(memeOfDayChannelID).then(async channel => {
+            await channel.send(meme[0]).then(sentMessage => {
+                logger.info(`Sent message: ${sentMessage.content} to channel: ${memeOfDayChannelID}`)
+            }).catch(error => logger.error(`error sending meme message ${error}`))
+        });
     }
 }

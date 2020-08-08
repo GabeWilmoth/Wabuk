@@ -40,7 +40,7 @@ client.on('message', message => {
 	} catch (error) {
         logger.error(`There was an error trying to execute that command! ${error}`);
 		message.reply('There was an error trying to execute that command!');
-	}
+    }
 });
 
 // login to Discord with your app's token
