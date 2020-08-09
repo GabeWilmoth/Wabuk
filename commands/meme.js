@@ -22,7 +22,7 @@ module.exports = {
         });
 
         // Cron Job to run every day at 19:00 aka 7pm.
-        let scheduledMessage2 = new cron.CronJob('0 02 19 * * *', () => {
+        let scheduledMessage2 = new cron.CronJob('0 00 19 * * *', () => {
             memeGen.dailyMeme(memeOfDayChannelID, message.client, message)
         });
 
