@@ -22,14 +22,24 @@ module.exports = {
         });
 
         // Cron Job to run every day at 19:00 aka 7pm.
-        let scheduledMessage2 = new cron.CronJob('0 00 19 * * *', () => {
+        let scheduledMessage2 = new cron.CronJob('0 02 19 * * *', () => {
             memeGen.dailyMeme(memeOfDayChannelID, message.client, message)
         });
 
         scheduledMessage.start();
         scheduledMessage2.start();
 
-        message.delete().then(msg => logger.info(`Deleted message from ${msg.author.username}`))
+        // Get messages testing for future modderation stuff
+        // message.channel.messages.fetch({ limit: 10 })
+        //     .then(messagesTest => {
+        //         for (const [key, value] of messagesTest.entries()) {
+        //             console.log(key, value.author.username, value.createdAt);
+        //         }
+        //     }).catch(console.error);
+
+        //Deleting the Rmeme command the user sent. 
+        message.delete()
+        .then(msg => logger.info(`Deleted message from ${msg.author.username}`))
         .catch(error => {
             logger.error(`Attempted deleting message and encountered error: ${error}`);
             if(error.message === 'Missing Permissions') {

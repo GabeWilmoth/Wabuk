@@ -4,14 +4,20 @@ const Discord = require('discord.js');
 require('dotenv').config();
 // require global logger from winston
 var logger = require('./logger/Logger.js');
+// require filesystem for file related processes
+const fs = require('fs');
+// require cron for time based jobs
+var cron = require('cron');
 
 const token = process.env.TOKEN;
 const prefix = process.env.PREFIX;
 // create a new Discord client
 const client = new Discord.Client();
 
+// Map to see if meme command is used more than once in the server
+let channelIdMemeMap = new Map();
+
 //Dynamic Command's
-const fs = require('fs');
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -27,6 +33,19 @@ client.once('ready', () => {
     logger.info("The Client is Ready");
 });
 
+// let testCron =  new cron.CronJob('0 41 00 * * *', () => {
+//     let test = client.users.cache;
+//     let jsonTest = test.toJSON;
+
+//     console.log(jsonTest);
+
+//     for (const [key, value] of test.entries()) {
+//         console.log(key, value.lastMessage);
+//     }
+// });
+
+// testCron.start();
+
 client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -36,7 +55,15 @@ client.on('message', message => {
     if (!client.commands.has(command)) return;
 
 	try {
-		client.commands.get(command).execute(message, args);
+        if(command === "meme" && !channelIdMemeMap.has(message.channel.id)) {
+            client.commands.get(command).execute(message, args);
+            channelIdMemeMap.set(message.channel.id, null);
+        } else if(command != "meme") {
+            client.commands.get(command).execute(message, args);
+        } else {
+            message.reply(`The command: ${prefix + command} has already been used in the server.`);
+            logger.info(`The command: ${command} has already been used in the server: ${message.channel.guild.name}`)
+        }
 	} catch (error) {
         logger.error(`There was an error trying to execute that command! ${error}`);
 		message.reply('There was an error trying to execute that command!');
