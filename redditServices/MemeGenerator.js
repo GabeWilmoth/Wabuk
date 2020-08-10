@@ -28,19 +28,28 @@ module.exports = class MemeGenerator {
         //Array of Memes, Poggers
         let meme = await this.getMeme();
         await client.channels.fetch(memeOfDayChannelID).then(async channel => {
-            await channel.send(meme[0]).then(sentMessage => {
+            await channel.send(meme[0]).then(async sentMessage => {
                 logger.info(`Sent message: ${sentMessage.content} to channel: ${memeOfDayChannelID}`);
 
-                //Trying to await reactions to the message in order to possibly fetch a new meme post.
-                //https://discordjs.guide/popular-topics/collectors.html#message-collectors
+                // Trying to await reactions to the message in order to possibly fetch a new meme post.
+                const filter = (reaction, user) => {
+                    return ['👍', '👎'].includes(reaction.emoji.name);
+                };
 
-                // const filter = (sentMessage) => sentMessage.emoji.name === '\:ok_hand\:'
-
-                // console.log(sentMessage.id)
-
-                // sentMessage.awaitReactions(filter, { time: 15000 })
-                // .then(collected => console.log(`Collected ${collected.size} reactions`))
-                // .catch(console.error);
+                sentMessage.awaitReactions(filter, {time: 60000, errors: ['time'] })
+                    .then(collected => {
+                        const reaction = collected.first();
+                        if (reaction.emoji.name === '👍') {
+                            sentMessage.reply('you reacted with a thumbs up.');
+                        }
+                        else {
+                            sentMessage.reply('you reacted with a thumbs down.');
+                        }
+                    })
+                    .catch(collected => {
+                        console.log(`After a minute, only ${collected.size} out of 4 reacted.`);
+                        sentMessage.reply('you didn\'t react with neither a thumbs up, nor a thumbs down.');
+                    });
 
             }).catch(error => logger.error(`error sending meme message ${error}`))
         });
